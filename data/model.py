@@ -1,3 +1,9 @@
+# import pandas
+import pandas as pd
+# import modeling characteristics
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
 # Equal Sample of Both Greater than 50K and Less than 50K
 df_greater_50k = df_census[df_census['income'] == '>50K']
 df_less_equal_50k = df_census[df_census['income'] == '<=50K']
