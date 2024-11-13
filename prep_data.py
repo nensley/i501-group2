@@ -29,3 +29,6 @@ plt.ylabel('Missing Value Count')
 plt.xticks(rotation=45)
 plt.show()
 print(f'Total number of rows with missing values: {missing_rows_count}')
+
+# Remove rows with missing values
+df = df.dropna()
