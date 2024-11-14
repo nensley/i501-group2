@@ -65,12 +65,9 @@ def preprocess_input_data(age, sex, education, occupation, race, hours_worked):
         else:
             return 'over_time'
 
-    input_data['employment_type'] = input_data['hours_worked'].apply(categorize_employment_type)
+    input_data['employment-type'] = input_data['hours_worked'].apply(categorize_employment_type)
 
     # Drop the original age and hours_worked columns, as they’ve been converted
     input_data = input_data.drop(columns=['age', 'hours_worked'])
-
-    # Convert categorical variables into dummy/indicator variables
-    input_data = pd.get_dummies(input_data, drop_first=True)
 
     return input_data
