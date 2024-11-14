@@ -6,8 +6,13 @@ import matplotlib.pyplot as plt
 # make a function that loads the data and preprocesses it
 def load_and_preprocess_data(file_path):
 
-    # open dataframe to work with
-    df = pd.read_csv(file_path)
+# Set column names
+column_names = ["age", "workclass", "fnlwgt", "education", "education-yr",
+                "marital-status", "occupation", "relationship", "race", "sex",
+                "capital-gain", "capital-loss", "hours-per-week", "native-country", "income"]
+
+# open dataframe to work with
+df = pd.read_csv("adult.data.csv", header=None, names=column_names)
 
     # remove the leading space of every value in columns containing string data
     df['sex'] = df['sex'].str.strip()
