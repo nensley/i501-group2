@@ -63,5 +63,18 @@ def main():
         prediction = model.predict(processed_input_data)
         st.write(f"Predicted Income Category: {prediction[0]}")
 
+    # Step 7: Visualization
+        user_inputs = {
+            'age': age,
+            'sex': sex,
+            'education': education,
+            'occupation': occupation,
+            'race': race,
+            'hours_worked': hours_worked
+        }
+
+        fig = create_income_distribution_plot(output_file_path, user_inputs)
+        st.pyplot(fig)
+
 if __name__ == '__main__':
     main()
