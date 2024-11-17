@@ -37,7 +37,7 @@ def main():
         preprocessor = saved_data['preprocessor']
     
     # Step 4: User Inputs (Dropboxes for sex, education, occupation, and race)
-    st.sidebar.header("Please select:")
+    st.sidebar.subheader("Please select:")
 
     age = st.sidebar.slider("Age", 17, 100, 25)
 
