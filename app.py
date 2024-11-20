@@ -8,7 +8,13 @@ from visualization import create_income_distribution_plot
 import os
 
 def main():
-    st.title("Income Prediction Model")
+    # Add Title and heading
+    st.write("""
+    # Income Prediction Model
+
+    This app predicts whether the income is >50K or <=50K
+
+    Dataset: Becker, B. & Kohavi, R. (1996). Adult [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5XW20.""")
     
     # Paths for data and model files
     input_file_path = 'data/adult.data.csv'  # Adjust this to the correct path to your data file
