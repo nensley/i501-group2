@@ -31,17 +31,17 @@ def main():
         preprocessor = saved_data['preprocessor']
     
     # Step 4: User Inputs (Dropboxes for sex, education, occupation, and race)
-    st.subheader("Please select:")
+    st.sidebar.subheader("Please select:")
 
-    age = st.number_input("Age", min_value=17, max_value=100)
+    age = st.sidebar.slider("Age", 17, 100, 25)
 
-    sex = st.selectbox("Sex", ("Male", "Female"))
+    sex = st.sidebar.selectbox("Sex", ("Male", "Female"))
 
-    education = st.selectbox(
+    education = st.sidebar.selectbox(
         "Education", ("Doctorate", "Professional School", "Masters", "Bachelors", "Associates", "Some College", "HS Grad")
     )
 
-    occupation = st.selectbox(
+    occupation = st.sidebar.selectbox(
         "Occupation",
         (
             "Executive/Management", "Professional Specialty", "Construction/Repair", "Administrative/Clerical", 
@@ -50,9 +50,9 @@ def main():
         ),
     )
 
-    hours_worked = st.number_input("Hours Worked Per Week", placeholder="Input your Weekly Hours", min_value=0, max_value=100)
+    hours_worked = st.sidebar.slider("Hours Worked Per Week", 0, 99, 40)
 
-    race = st.selectbox("Race", ("White", "Black", "Asian-Pac-Islander", "Amer-Indian-Eskimo", "Other"))
+    race = st.sidebar.selectbox("Race", ("White", "Black", "Asian-Pac-Islander", "Amer-Indian-Eskimo", "Other"))
     
     # Step 5: Preprocess User Input
     input_data = preprocess_input_data(age, sex, education, occupation, race, hours_worked)
