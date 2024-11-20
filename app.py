@@ -4,6 +4,7 @@ import pickle
 from prep_data import load_and_preprocess_data, save_processed_data
 from model import train_and_save_model
 from preprocess_input import preprocess_input_data
+from visualization import create_income_distribution_plot
 import os
 
 def main():
@@ -49,7 +50,7 @@ def main():
         ),
     )
 
-    hours_worked = st.number_input("Hours Worked Per Week", placeholder="Input your Weekly Hours")
+    hours_worked = st.number_input("Hours Worked Per Week", placeholder="Input your Weekly Hours", min_value=0, max_value=100)
 
     race = st.selectbox("Race", ("White", "Black", "Asian-Pac-Islander", "Amer-Indian-Eskimo", "Other"))
     
@@ -62,6 +63,7 @@ def main():
         # uses the model to make prediction based on input data
         prediction = model.predict(processed_input_data)
         st.write(f"Predicted Income Category: {prediction[0]}")
+        prediction_value = prediction[0]
 
     # Step 7: Visualization
         user_inputs = {
@@ -73,7 +75,7 @@ def main():
             'hours_worked': hours_worked
         }
 
-        fig = create_income_distribution_plot(output_file_path, user_inputs)
+        fig = create_income_distribution_plot(output_file_path, user_inputs, prediction_value)
         st.pyplot(fig)
 
 if __name__ == '__main__':
