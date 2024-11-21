@@ -29,12 +29,18 @@ def main():
     # Step 2: Train and Save the Model (if not already saved)
     if not os.path.exists(model_path):
         train_and_save_model(output_file_path)
-        
-    # Step 3: Load the trained model and processor
-    with open(model_path, 'rb') as f:
-        saved_data = pickle.load(f)
-        model = saved_data['model']
-        preprocessor = saved_data['preprocessor']
+    
+    # cache the model in the computer memory
+    @st.cache_data
+    def load_model(model_path):    
+        # Step 3: Load the trained model and processor
+        with open(model_path, 'rb') as f:
+            saved_data = pickle.load(f)
+            model = saved_data['model']
+            preprocessor = saved_data['preprocessor']   
+        return model, preprocessor
+    # loads the model and preprocessor to store
+    model, preprocessor = load_model(model_path)
     
     # Step 4: User Inputs (Dropboxes for sex, education, occupation, and race)
     st.sidebar.subheader("Please select:")
