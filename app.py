@@ -4,17 +4,17 @@ import pickle
 from prep_data import load_and_preprocess_data, save_processed_data
 from model import train_and_save_model
 from preprocess_input import preprocess_input_data
+from visualization import create_income_distribution_plot
 import os
 
-st.write("""
+def main():
+    # Add Title and heading
+    st.write("""
     # Income Prediction Model
 
     This app predicts whether the income is >50K or <=50K
 
-    Dataset: Becker, B. & Kohavi, R. (1996). Adult [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5XW20.
-""")
-
-def main():
+    Dataset: Becker, B. & Kohavi, R. (1996). Adult [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5XW20.""")
     
     # Paths for data and model files
     input_file_path = 'data/adult.data.csv'  # Adjust this to the correct path to your data file
@@ -25,16 +25,22 @@ def main():
     if not os.path.exists(output_file_path):
         processed_df = load_and_preprocess_data(input_file_path)
         save_processed_data(processed_df, output_file_path)
-        
+          
     # Step 2: Train and Save the Model (if not already saved)
     if not os.path.exists(model_path):
         train_and_save_model(output_file_path)
-        
-    # Step 3: Load the trained model and processor
-    with open(model_path, 'rb') as f:
-        saved_data = pickle.load(f)
-        model = saved_data['model']
-        preprocessor = saved_data['preprocessor']
+    
+    # cache the model in the computer memory
+    @st.cache_data
+    def load_model(model_path):    
+        # Step 3: Load the trained model and processor
+        with open(model_path, 'rb') as f:
+            saved_data = pickle.load(f)
+            model = saved_data['model']
+            preprocessor = saved_data['preprocessor']   
+        return model, preprocessor
+    # loads the model and preprocessor to store
+    model, preprocessor = load_model(model_path)
     
     # Step 4: User Inputs (Dropboxes for sex, education, occupation, and race)
     st.sidebar.subheader("Please select:")
@@ -69,7 +75,20 @@ def main():
         # uses the model to make prediction based on input data
         prediction = model.predict(processed_input_data)
         st.write(f"Predicted Income Category: {prediction[0]}")
+        prediction_value = prediction[0]
 
+    # Step 7: Visualization
+        user_inputs = {
+            'age': age,
+            'sex': sex,
+            'education': education,
+            'occupation': occupation,
+            'race': race,
+            'hours_worked': hours_worked
+        }
+
+        fig = create_income_distribution_plot(output_file_path, user_inputs, prediction_value)
+        st.pyplot(fig)
 
 if __name__ == '__main__':
     main()
