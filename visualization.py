@@ -2,10 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def create_income_distribution_plot(processed_data_path, user_inputs):
+def create_income_distribution_plot(processed_data_path, user_inputs, prediction):
     df = pd.read_csv(processed_data_path) # Load the processed data
     from preprocess_input import preprocess_input_data # Import the preprocess_input_data function
 
+    # process the input data
     input_data = preprocess_input_data(
         age=user_inputs['age'],
         sex=user_inputs['sex'],
@@ -15,10 +16,13 @@ def create_income_distribution_plot(processed_data_path, user_inputs):
         hours_worked=user_inputs['hours_worked']
     )
 
-    
+
     processed_inputs = input_data.iloc[0].to_dict() # Extract processed input values
 
     variables = processed_inputs.keys() # Define the variables to visualize
+    # Remove 'education-yr' from the variables list
+    variables = [var for var in variables if var != 'education-yr']
+    print(variables)
 
     # Initialize a list to store the percentage data
     percentage_data = {
@@ -49,6 +53,9 @@ def create_income_distribution_plot(processed_data_path, user_inputs):
     # Create a DataFrame from the percentage data
     pct_df = pd.DataFrame(percentage_data)
 
+    # Sort the values by the highest percentage of the predicted value
+    pct_df = pct_df.sort_values(by=f'{prediction} (%)', ascending=True).reset_index(drop=True)
+
     # Set the style for the plot
     sns.set_style("whitegrid")
     # Initialize the matplotlib figure
@@ -57,9 +64,9 @@ def create_income_distribution_plot(processed_data_path, user_inputs):
     bar_width = 0.4
     index = range(len(pct_df))
 
-    # Plot the bars
-    ax.barh([i + bar_width for i in index], pct_df['<=50K (%)'], height=bar_width, color='skyblue', label='<=50K')
-    ax.barh(index, pct_df['>50K (%)'], height=bar_width, color='salmon', label='>50K')
+    # Plot the bars directly next to each other
+    ax.barh(index, pct_df['<=50K (%)'], height=bar_width, color='skyblue', label='<=50K', align='edge')
+    ax.barh(index, pct_df['>50K (%)'], height=bar_width, color='salmon', label='>50K', align='edge', left=pct_df['<=50K (%)'])
 
     # Set the y-ticks and labels
     ax.set_yticks([i + bar_width / 2 for i in index])
@@ -74,8 +81,13 @@ def create_income_distribution_plot(processed_data_path, user_inputs):
 
     # Add percentage labels to the bars
     for i in index:
-        ax.text(pct_df['<=50K (%)'][i] + 1, i + bar_width, f"{pct_df['<=50K (%)'][i]:.1f}%", va='center', color='black', fontsize=9)
-        ax.text(pct_df['>50K (%)'][i] + 1, i, f"{pct_df['>50K (%)'][i]:.1f}%", va='center', color='black', fontsize=9)
+        # Label for <=50K
+        ax.text(pct_df['<=50K (%)'][i] / 2, i + bar_width/2, f"{pct_df['<=50K (%)'][i]:.1f}%", 
+            va='center', ha='center', color='black', fontsize=9)
+    
+        # Label for >50K
+        ax.text(pct_df['<=50K (%)'][i] + pct_df['>50K (%)'][i] / 2, i + bar_width / 2, f"{pct_df['>50K (%)'][i]:.1f}%", 
+            va='center', ha='center', color='black', fontsize=9)
 
     # Adjust layout for better fit
     plt.tight_layout()

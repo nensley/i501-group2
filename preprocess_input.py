@@ -58,9 +58,9 @@ def preprocess_input_data(age, sex, education, occupation, race, hours_worked):
 
     # Categorize Hours Worked as Employment Type
     def categorize_employment_type(hours):
-        if hours < 34:
+        if hours < 35:
             return 'part_time'
-        elif 34 <= hours <= 40:
+        elif 35 <= hours <= 40:
             return 'full_time'
         else:
             return 'over_time'
