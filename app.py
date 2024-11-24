@@ -88,7 +88,8 @@ def main():
         }
 
         fig = create_income_distribution_plot(output_file_path, user_inputs, prediction_value)
-        st.pyplot(fig)
+        # st.pyplot(fig)
+        st.plotly_chart(fig)
 
 if __name__ == '__main__':
     main()

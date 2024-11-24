@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
 
 def create_income_distribution_plot(processed_data_path, user_inputs, prediction):
     df = pd.read_csv(processed_data_path) # Load the processed data
@@ -56,40 +57,58 @@ def create_income_distribution_plot(processed_data_path, user_inputs, prediction
     # Sort the values by the highest percentage of the predicted value
     pct_df = pct_df.sort_values(by=f'{prediction} (%)', ascending=True).reset_index(drop=True)
 
-    # Set the style for the plot
-    sns.set_style("whitegrid")
-    # Initialize the matplotlib figure
-    fig, ax = plt.subplots(figsize=(10, 6))
-    # Set the positions and width for the bars
-    bar_width = 0.4
-    index = range(len(pct_df))
+    # Melt the DataFrame
+    pct_df_melted = pct_df.melt(id_vars=['Variable'], value_vars=['<=50K (%)', '>50K (%)'],
+                                var_name='Income', value_name='Percentage')
 
-    # Plot the bars directly next to each other
-    ax.barh(index, pct_df['<=50K (%)'], height=bar_width, color='skyblue', label='<=50K', align='edge')
-    ax.barh(index, pct_df['>50K (%)'], height=bar_width, color='salmon', label='>50K', align='edge', left=pct_df['<=50K (%)'])
-
-    # Set the y-ticks and labels
-    ax.set_yticks([i + bar_width / 2 for i in index])
-    ax.set_yticklabels(pct_df['Variable'])
-
-    # Set labels and title
-    ax.set_xlabel('Percentage (%)')
-    ax.set_title('Income Distribution by Input Variables')
-
-    # Add legend
-    ax.legend()
-
-    # Add percentage labels to the bars
-    for i in index:
-        # Label for <=50K
-        ax.text(pct_df['<=50K (%)'][i] / 2, i + bar_width/2, f"{pct_df['<=50K (%)'][i]:.1f}%", 
-            va='center', ha='center', color='black', fontsize=9)
-    
-        # Label for >50K
-        ax.text(pct_df['<=50K (%)'][i] + pct_df['>50K (%)'][i] / 2, i + bar_width / 2, f"{pct_df['>50K (%)'][i]:.1f}%", 
-            va='center', ha='center', color='black', fontsize=9)
-
-    # Adjust layout for better fit
-    plt.tight_layout()
+    # Create a stacked bar plot using Plotly Express
+    fig = px.bar(
+        pct_df_melted,
+        x='Percentage',
+        y='Variable',
+        color='Income',
+        orientation='h',  # Horizontal bars
+        title="Income Distribution by Input Variables",
+        labels={'Percentage': 'Percentage (%)', 'Variable': 'Input Variables'},
+        color_discrete_map={'<=50K (%)': 'skyblue', '>50K (%)': 'salmon'},
+        hover_data={'Variable': True, 'Percentage': ':.1f'}
+    )
 
     return fig
+
+    # # Set the style for the plot
+    # sns.set_style("whitegrid")
+    # # Initialize the matplotlib figure
+    # fig, ax = plt.subplots(figsize=(10, 6))
+    # # Set the positions and width for the bars
+    # bar_width = 0.4
+    # index = range(len(pct_df))
+
+    # # Plot the bars directly next to each other
+    # ax.barh(index, pct_df['<=50K (%)'], height=bar_width, color='skyblue', label='<=50K', align='edge')
+    # ax.barh(index, pct_df['>50K (%)'], height=bar_width, color='salmon', label='>50K', align='edge', left=pct_df['<=50K (%)'])
+
+    # # Set the y-ticks and labels
+    # ax.set_yticks([i + bar_width / 2 for i in index])
+    # ax.set_yticklabels(pct_df['Variable'])
+
+    # # Set labels and title
+    # ax.set_xlabel('Percentage (%)')
+    # ax.set_title('Income Distribution by Input Variables')
+
+    # # Add legend
+    # ax.legend()
+
+    # # Add percentage labels to the bars
+    # for i in index:
+    #     # Label for <=50K
+    #     ax.text(pct_df['<=50K (%)'][i] / 2, i + bar_width/2, f"{pct_df['<=50K (%)'][i]:.1f}%", 
+    #         va='center', ha='center', color='black', fontsize=9)
+    
+    #     # Label for >50K
+    #     ax.text(pct_df['<=50K (%)'][i] + pct_df['>50K (%)'][i] / 2, i + bar_width / 2, f"{pct_df['>50K (%)'][i]:.1f}%", 
+    #         va='center', ha='center', color='black', fontsize=9)
+
+    # # Adjust layout for better fit
+    # plt.tight_layout()
+    
