@@ -74,8 +74,15 @@ def main():
     if st.button("Predict Income"):
         # uses the model to make prediction based on input data
         prediction = model.predict(processed_input_data)
-        st.write(f"Predicted Income Category: {prediction[0]}")
         prediction_value = prediction[0]
+        # Set the color based on the prediction value
+        if prediction_value == '<=50K':
+            box_color = 'skyblue'
+        else:
+            box_color = 'salmon'
+
+        # Display the prediction with the corresponding box color, bold black text
+        st.markdown(f"<div style='background-color:{box_color}; padding: 10px; font-size: 16px; font-weight: bold; color: black;'>Predicted Income Category: {prediction_value}</div>", unsafe_allow_html=True)
 
     # Step 7: Visualization
         user_inputs = {
