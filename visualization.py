@@ -72,41 +72,23 @@ def create_income_distribution_plot(processed_data_path, user_inputs, prediction
     pct_df_melted = pct_df.melt(id_vars=['Variable', 'Value'], value_vars=['<=50K (%)', '>50K (%)'],
                                 var_name='Income', value_name='Percentage')
 
-    # Create a stacked bar plot using Plotly Express
+    
+    # Create a stacked bar plot using Plotly Express with color gradient
     fig = px.bar(
         pct_df_melted,
         x='Percentage',
         y='Variable',
-        color='Income',
-        orientation='h',  # Horizontal bars
+        color='Percentage',  # Bind the color intensity to the percentage
+        orientation='h',
+        text='Percentage',  # Add percentage labels to bars
         title="Income Distribution by Input Variables",
+        color_continuous_scale='Viridis',  # Color scale for gradient
         labels={'Percentage': 'Percentage (%)', 'Variable': 'Variable'},
-        color_discrete_map={'<=50K (%)': 'skyblue', '>50K (%)': 'salmon'},
-        hover_data={'Variable': True, 'Value': True, 'Percentage': ':.1f'}
     )
 
-    # Add percentage labels for each bar
-    for i, row in pct_df_melted.iterrows():
-        # Calculate the position for the label
-        if row['Income'] == '<=50K (%)':
-            x_position = row['Percentage'] / 2  # Center of the first bar
-        else:
-            x_position = 100 - (row['Percentage'] / 2)  # Center of the second bar
-        
-        # Determine font weight based on the predicted value
-        # Bold the bars that match the prediction
-        font_weight = "bold" if row['Income'] == f"{prediction} (%)" else "normal"
-
-        # add percentage label to each bar
-        fig.add_annotation(
-            x=x_position,
-            y=row['Variable'],  
-            text=f"{row['Percentage']:.1f}%",
-            showarrow=False,
-            font=dict(size=10, color="black", weight=font_weight),
-            xanchor='center',
-            yanchor='middle',
-        )
+    # Update layout for better visual appearance
+    fig.update_traces(texttemplate='%{text:.1f}%', textposition='inside')
+    fig.update_layout(coloraxis_colorbar=dict(title="Percentage (%)"))
 
     return fig
 
