@@ -16,27 +16,37 @@ def create_income_distribution_plot(processed_data_path, user_inputs, prediction
         race=user_inputs['race'],
         hours_worked=user_inputs['hours_worked']
     )
-
+    print(input_data)
 
     processed_inputs = input_data.iloc[0].to_dict() # Extract processed input values
 
     variables = processed_inputs.keys() # Define the variables to visualize
     # Remove 'education-yr' from the variables list
-    variables = [var for var in variables if var != 'education-yr']
-    print(variables)
+    variables = [var for var in variables  if var != 'education-yr']
 
     # Initialize a list to store the percentage data
     percentage_data = {
         'Variable': [],
         '<=50K (%)': [],
-        '>50K (%)': []
+        '>50K (%)': [],
+        'Value': []
     }
 
     # Iterate over each variable and calculate percentages
     for var in variables:
-        value = processed_inputs[var]
-        subset = df[df[var] == value]
+        # for education, use education-yr for the calculation
+        if var == 'education': 
+            value = user_inputs['education'] 
+            calc_var = 'education-yr'
+            calc_value = processed_inputs[calc_var]
+            subset = df[df[calc_var] == calc_value]
+        else:
+            value = processed_inputs[var]
+            subset = df[df[var] == value]
+        
+        # total of values for each variable
         total = len(subset)
+        # if no matching values
         if total == 0:
             # Avoid division by zero
             pct_less_equal = 0
@@ -50,6 +60,7 @@ def create_income_distribution_plot(processed_data_path, user_inputs, prediction
         percentage_data['Variable'].append(var.replace('-', ' ').title())
         percentage_data['<=50K (%)'].append(pct_less_equal)
         percentage_data['>50K (%)'].append(pct_greater)
+        percentage_data['Value'].append(value)
 
     # Create a DataFrame from the percentage data
     pct_df = pd.DataFrame(percentage_data)
@@ -58,7 +69,7 @@ def create_income_distribution_plot(processed_data_path, user_inputs, prediction
     pct_df = pct_df.sort_values(by=f'{prediction} (%)', ascending=True).reset_index(drop=True)
 
     # Melt the DataFrame
-    pct_df_melted = pct_df.melt(id_vars=['Variable'], value_vars=['<=50K (%)', '>50K (%)'],
+    pct_df_melted = pct_df.melt(id_vars=['Variable', 'Value'], value_vars=['<=50K (%)', '>50K (%)'],
                                 var_name='Income', value_name='Percentage')
 
     # Create a stacked bar plot using Plotly Express
@@ -69,10 +80,33 @@ def create_income_distribution_plot(processed_data_path, user_inputs, prediction
         color='Income',
         orientation='h',  # Horizontal bars
         title="Income Distribution by Input Variables",
-        labels={'Percentage': 'Percentage (%)', 'Variable': 'Input Variables'},
+        labels={'Percentage': 'Percentage (%)', 'Variable': 'Variable'},
         color_discrete_map={'<=50K (%)': 'skyblue', '>50K (%)': 'salmon'},
-        hover_data={'Variable': True, 'Percentage': ':.1f'}
+        hover_data={'Variable': True, 'Value': True, 'Percentage': ':.1f'}
     )
+
+    # Add percentage labels for each bar
+    for i, row in pct_df_melted.iterrows():
+        # Calculate the position for the label
+        if row['Income'] == '<=50K (%)':
+            x_position = row['Percentage'] / 2  # Center of the first bar
+        else:
+            x_position = 100 - (row['Percentage'] / 2)  # Center of the second bar
+        
+        # Determine font weight based on the predicted value
+        # Bold the bars that match the prediction
+        font_weight = "bold" if row['Income'] == f"{prediction} (%)" else "normal"
+
+        # add percentage label to each bar
+        fig.add_annotation(
+            x=x_position,
+            y=row['Variable'],  
+            text=f"{row['Percentage']:.1f}%",
+            showarrow=False,
+            font=dict(size=10, color="black", weight=font_weight),
+            xanchor='center',
+            yanchor='middle',
+        )
 
     return fig
 
