@@ -81,7 +81,7 @@ def create_income_distribution_plot(processed_data_path, user_inputs, prediction
         orientation='h',  # Horizontal bars
         title="Income Distribution by Input Variables",
         labels={'Percentage': 'Percentage (%)', 'Variable': 'Variable'},
-        color_discrete_map={'<=50K (%)': 'skyblue', '>50K (%)': 'salmon'},
+        color_discrete_map={'<=50K (%)': 'salmon', '>50K (%)': 'skyblue'},
         hover_data={'Variable': True, 'Value': True, 'Percentage': ':.1f'}
     )
 
