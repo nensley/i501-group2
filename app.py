@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 from prep_data import load_and_preprocess_data, save_processed_data
-from model import train_and_save_model
+from model import IncomeModelTrainer
 from preprocess_input import preprocess_input_data
 from visualization import create_income_distribution_plot
 import os
@@ -20,6 +20,9 @@ def main():
     input_file_path = 'data/adult.data.csv'  # Adjust this to the correct path to your data file
     output_file_path = 'data/processed_data.csv'  # Path where the processed data will be saved
     model_path = 'trained_model.pkl'  # Path where the model is stored
+
+    # initialize the income model class
+    income_model = IncomeModelTrainer(model_save_path=model_path)
     
     # Step 1: Load and preprocess the data
     if not os.path.exists(output_file_path):
@@ -28,19 +31,24 @@ def main():
           
     # Step 2: Train and Save the Model (if not already saved)
     if not os.path.exists(model_path):
-        train_and_save_model(output_file_path)
+        income_model.train_model()
+        income_model.save_model()
     
-    # cache the model in the computer memory
+    # Cache the model in memory
     @st.cache_data
-    def load_model(model_path):    
-        # Step 3: Load the trained model and processor
-        with open(model_path, 'rb') as f:
-            saved_data = pickle.load(f)
-            model = saved_data['model']
-            preprocessor = saved_data['preprocessor']   
-        return model, preprocessor
-    # loads the model and preprocessor to store
-    model, preprocessor = load_model(model_path)
+    # define the function to load and cache the model
+    def load_and_cache_model():
+        try:
+            # Load the model and preprocessor from python class
+            model, preprocessor = income_model.load_model()  # Ensure parentheses to call the method
+            return model, preprocessor
+        except Exception as e:
+            # Handle error if the model is not loaded
+            st.error(f"Error loading model: {e}")
+            st.stop()  # Stop the application if the model cannot be loaded
+
+    # Call the function to load and cache the model
+    model, preprocessor = load_and_cache_model()
     
     # Step 4: User Inputs (Dropboxes for sex, education, occupation, and race)
     st.sidebar.subheader("Please select:")
