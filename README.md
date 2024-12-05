@@ -1,6 +1,6 @@
 # i501-group2
 
-Abstract or Overview: The purpose of the project is to show what factors are most important in determining income through an interactive user interface that allows users to adjust different potential income factors. A stakeholder may look for how certain genetic factors, like race and sex, impact the income of an individual that has similar job qualification. This may indicate pay inequality.
+Abstract or Overview: The purpose of the project is to predict the income of an individual through an interactive user interface that allows users to adjust different potential income factors. A stakeholder may look for how certain demographic factors, like race and sex, impact the income of an individual that has similar job qualification. This may indicate pay inequality.
 
 Data Description: The data used in the dataset is from a census dataset located at https://doi.org/10.24432/C5XW20. The data is a sample of 48,842 individual instances in the 1994 U.S. census data and includes a variety of demographic values in addition to whether the income of the individual is greater than or less than 50 thousand dollars.
 
