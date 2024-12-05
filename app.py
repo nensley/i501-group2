@@ -77,9 +77,9 @@ def main():
         prediction_value = prediction[0]
         # Set the color based on the prediction value
         if prediction_value == '<=50K':
-            box_color = 'skyblue'
-        else:
             box_color = 'salmon'
+        else:
+            box_color = 'skyblue'
 
         # Display the prediction with the corresponding box color, bold black text
         st.markdown(f"<div style='background-color:{box_color}; padding: 10px; font-size: 16px; font-weight: bold; color: black;'>Predicted Income Category: {prediction_value}</div>", unsafe_allow_html=True)
