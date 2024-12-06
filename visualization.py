@@ -16,13 +16,17 @@ def create_income_distribution_plot(processed_data_path, user_inputs, prediction
         race=user_inputs['race'],
         hours_worked=user_inputs['hours_worked']
     )
-    print(input_data)
 
     processed_inputs = input_data.iloc[0].to_dict() # Extract processed input values
 
-    variables = processed_inputs.keys() # Define the variables to visualize
-    # Remove 'education-yr' from the variables list
-    variables = [var for var in variables  if var != 'education-yr']
+    # add education with input education value to the processed inputs
+    processed_inputs['education'] = user_inputs['education']
+
+    # define the variables
+    variables = processed_inputs.keys()
+
+    # Remove 'education-yr' from the visualization list
+    variables = [var for var in variables if var != 'education-yr']
 
     # Initialize a list to store the percentage data
     percentage_data = {
