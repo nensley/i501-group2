@@ -70,4 +70,7 @@ def preprocess_input_data(age, sex, education, occupation, race, hours_worked):
     # Drop the original age and hours_worked columns, as they’ve been converted
     input_data = input_data.drop(columns=['age', 'hours_worked'])
 
+    # Reorder the columns to match the expected order
+    input_data = input_data[['age-group', 'sex', 'education-yr', 'occupation', 'employment-type', 'race']]
+
     return input_data
