@@ -6,6 +6,7 @@ from model import IncomeModelTrainer
 from preprocess_input import preprocess_input_data
 from visualization import create_income_distribution_plot
 import os
+from dotenv import load_dotenv
 
 def main():
     # Add Title and heading
@@ -16,10 +17,13 @@ def main():
 
     Dataset: Becker, B. & Kohavi, R. (1996). Adult [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5XW20.""")
     
-    # Paths for data and model files
-    input_file_path = 'data/adult.data.csv'  # Adjust this to the correct path to your data file
-    output_file_path = 'data/processed_data.csv'  # Path where the processed data will be saved
-    model_path = 'trained_model.pkl'  # Path where the model is stored
+    # take environment variables from .env
+    load_dotenv()  
+    
+    # Retrieves daths for data and model files from .env file
+    input_file_path = os.getenv('INPUT_FILE_PATH')
+    output_file_path = os.getenv('OUTPUT_FILE_PATH')  # Path where the processed data will be saved
+    model_path = os.getenv('MODEL_PATH')  # Path where the model is stored
 
     # initialize the income model class
     income_model = IncomeModelTrainer(model_save_path=model_path)
