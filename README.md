@@ -6,13 +6,13 @@ Data Description: The data used in the dataset is from a census dataset located 
 
 Algorithm Description: Data is loaded into the application and preprocessed according to data cleaning measures, including removing rows with missing data and developing new categorical variables from numerical variables using pandas dataframe manipulation methods. This processed data is then saved and used to train a logistic regression model with a binary income target variable. This model, developed using the sklearn package, is then cached in the webpage for frequent use, where it is retrieved from memory and used to make a prediction when a user changes different values in a sidebar and clicks the submit button. Input data is reclassified according to methods saved in the preprocessor and yields a prediction. This prediction is output to a text box on the streamlit application. Additionally, input values are used to get the income percentage values of different parameters, which is output in an interactive stacked bar chart using plotly.
 
-Tools Used.
-    - pandas: Used for data manipulation and preprocessing, such as cleaning and transforming raw data into a usable format.
-    - scikit-learn: Used for implementing the logistic regression model and handling training, testing, and predictions.
-    - streamlit: Provides the framework for creating the interactive web application, including the sidebar for inputs and the prediction display.
-    - plotly: Used for creating interactive visualizations to display income percentages for each parameter
-    - numpy: Supports numerical computations and handling of arrays where necessary.
-    - pickle:  Used to serialize and save the trained logistic regression model for efficient reuse without needing to retrain the model each time the application is launched.
+## Tools Used
+- **pandas**: Used for data manipulation and preprocessing, such as cleaning and transforming raw data into a usable format.
+- **scikit-learn**: Used for implementing the logistic regression model and handling training, testing, and predictions.
+- **streamlit**: Provides the framework for creating the interactive web application, including the sidebar for inputs and the prediction display.
+- **plotly**: Used for creating interactive visualizations to display income percentages for each parameter.
+- **numpy**: Supports numerical computations and handling of arrays where necessary.
+- **pickle**: Used to serialize and save the trained logistic regression model for efficient reuse without needing to retrain the model each time the application is launched.
 
 Ethical Concerns:
   1. Historical Bias: Dataset is outdated with census data from 1994. The data only includes two genders, and income is not close to comparable data for the current year, leading users to gain insights that would not apply to their current historical context.
