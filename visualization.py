@@ -19,7 +19,7 @@ def create_income_distribution_plot(processed_data_path, user_inputs, prediction
 
     processed_inputs = input_data.iloc[0].to_dict() # Extract processed input values
 
-    # add education with input education value to the processed inputs
+    # add education value to the processed inputs
     processed_inputs['education'] = user_inputs['education']
 
     # define the variables
